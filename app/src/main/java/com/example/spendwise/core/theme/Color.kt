@@ -1,4 +1,4 @@
-package com.example.spendwise.ui.theme
+package com.example.spendwise.core.theme
 
 import androidx.compose.ui.graphics.Color
 
