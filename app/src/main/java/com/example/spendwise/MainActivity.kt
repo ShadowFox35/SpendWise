@@ -1,6 +1,6 @@
 package com.example.spendwise
 
-import BottomNavigationBar
+import com.example.spendwise.navigation.BottomNavigationBar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,10 +15,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.core.theme.SpendWiseTheme
-import com.example.spendwise.navigation.NavGraph
-import com.example.spendwise.navigation.ROUTE_ADD_TRANSACTION
+import com.example.spendwise.navigation.AppRoutes
+import com.example.spendwise.navigation.BottomNavigationRoutes
+import com.example.spendwise.navigation.NavigationGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,27 +37,40 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val isBottomNavRoute = currentRoute in setOf(
+        BottomNavigationRoutes.HOME_ROUTE,
+        BottomNavigationRoutes.TRANSACTION_ROUTE,
+        BottomNavigationRoutes.BUDGET_ROUTE,
+        BottomNavigationRoutes.OTHER_ROUTE
+    )
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
-            BottomNavigationBar(navController = navController)
+            if (isBottomNavRoute) {
+                BottomNavigationBar(navController = navController)
+            }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(ROUTE_ADD_TRANSACTION)
-                },
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Transaction"
-                )
+            if (isBottomNavRoute) {
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(AppRoutes.ADD_TRANSACTION_ROUTE)
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Transaction"
+                    )
+                }
             }
+
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            NavGraph(navController = navController)
+            NavigationGraph(navController = navController)
         }
     }
 }
