@@ -10,22 +10,22 @@ import androidx.navigation.compose.composable
 import com.example.spendwise.ui.budget.BudgetScreen
 import com.example.spendwise.ui.home.HomeScreen
 import com.example.spendwise.ui.other.OtherScreen
-import com.example.spendwise.ui.transactions.TransactionsScreen
 import com.example.spendwise.ui.transactions.add_transaction.AddTransactionsScreen
+import com.example.spendwise.ui.transactions.transactions.TransactionsScreen
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = BottomNavigationRoutes.HOME_ROUTE,
-        enterTransition = { fadeIn(animationSpec = tween(500)) },
-        exitTransition = { fadeOut(animationSpec = tween(500)) },
+        enterTransition = { fadeIn(animationSpec = tween(200)) },
+        exitTransition = { fadeOut(animationSpec = tween(200)) },
     ) {
         composable(BottomNavigationRoutes.HOME_ROUTE) {
             HomeScreen()
         }
         composable(BottomNavigationRoutes.TRANSACTION_ROUTE) {
-            TransactionsScreen()
+            TransactionsScreen(navController = navController)
         }
         composable(BottomNavigationRoutes.BUDGET_ROUTE) {
             BudgetScreen()
@@ -34,6 +34,8 @@ fun NavigationGraph(navController: NavHostController) {
             OtherScreen()
         }
 
-        composable(AppRoutes.ADD_TRANSACTION_ROUTE) { AddTransactionsScreen() }
+        composable(AppRoutes.ADD_TRANSACTION_ROUTE) {
+            AddTransactionsScreen(navController = navController)
+        }
     }
 }
