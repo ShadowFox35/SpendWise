@@ -7,35 +7,47 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.example.spendwise.core.theme.LocalNavController
+import com.example.spendwise.domain.models.TransactionModel
 import com.example.spendwise.ui.budget.BudgetScreen
 import com.example.spendwise.ui.home.HomeScreen
 import com.example.spendwise.ui.other.OtherScreen
 import com.example.spendwise.ui.transactions.add_transaction.AddTransactionsScreen
 import com.example.spendwise.ui.transactions.transactions.TransactionsScreen
+import kotlinx.serialization.InternalSerializationApi
+import kotlinx.serialization.serializer
+import kotlin.reflect.typeOf
 
+@OptIn(InternalSerializationApi::class)
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph() {
+    val navController = LocalNavController.current as NavHostController
+
     NavHost(
         navController = navController,
-        startDestination = BottomNavigationRoutes.HOME_ROUTE,
+        startDestination = HomeRoute,
         enterTransition = { fadeIn(animationSpec = tween(200)) },
         exitTransition = { fadeOut(animationSpec = tween(200)) },
     ) {
-        composable(BottomNavigationRoutes.HOME_ROUTE) {
-            HomeScreen()
-        }
-        composable(BottomNavigationRoutes.TRANSACTION_ROUTE) {
-            TransactionsScreen(navController = navController)
-        }
-        composable(BottomNavigationRoutes.BUDGET_ROUTE) {
-            BudgetScreen()
-        }
-        composable(BottomNavigationRoutes.OTHER_ROUTE) {
-            OtherScreen()
+        composable<HomeRoute> { HomeScreen() }
+        composable<TransactionRoute> { TransactionsScreen() }
+        composable<BudgetRoute> { BudgetScreen() }
+        composable<OtherRoute> { OtherScreen() }
+
+        composable<EditTransactionRoute>(
+            typeMap = mapOf(
+                typeOf<TransactionModel>() to CustomNavType(TransactionModel::class.serializer()),
+
+                )
+        ) { backStackEntry ->
+            val args: EditTransactionRoute = backStackEntry.toRoute()
+            AddTransactionsScreen(navController = navController, args.transactionItemId)
         }
 
-        composable(AppRoutes.ADD_TRANSACTION_ROUTE) {
-            AddTransactionsScreen(navController = navController)
+        composable<AddTransactionRoute>(
+        ) {
+            AddTransactionsScreen(navController = navController, null)
         }
     }
 }

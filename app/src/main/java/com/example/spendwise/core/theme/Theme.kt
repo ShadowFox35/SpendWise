@@ -8,7 +8,11 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -48,10 +52,15 @@ fun SpendWiseTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    val navController = rememberNavController()
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalNavController provides navController) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }
+
+val LocalNavController = compositionLocalOf<NavController> { error("No NavController found!") }

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">SpendWise</string>
+    <!--Common-->
+    <string name="common_delete">Delete</string>
+    <string name="common_back">Back</string>
+
+    <!--Transaction Screen-->
+    <string name="transaction_screen_empty">No transactions yet</string>
+
+    <!--Save Transaction Screens-->
+    <string name="add_transaction_screen_title">Add Transaction</string>
+    <string name="edit_transaction_screen_title">Edit Transaction</string>
+    <string name="add_transaction_screen_amount_field">Amount</string>
+    <string name="add_transaction_screen_title_field">Title</string>
+    <string name="add_transaction_screen_submit_button">Save Transaction</string>
+
 </resources>

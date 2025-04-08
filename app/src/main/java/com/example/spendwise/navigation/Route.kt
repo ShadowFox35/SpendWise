@@ -1,37 +1,31 @@
 package com.example.spendwise.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.serialization.Serializable
 
-object BottomNavigationRoutes {
-    const val HOME_ROUTE = "home"
-    const val TRANSACTION_ROUTE = "transactions"
-    const val BUDGET_ROUTE = "budget"
-    const val OTHER_ROUTE = "other"
+interface BottomNavRoute
+
+@Serializable
+data object HomeRoute : BottomNavRoute
+
+@Serializable
+data object TransactionRoute : BottomNavRoute
+
+@Serializable
+data object BudgetRoute : BottomNavRoute
+
+@Serializable
+data object OtherRoute : BottomNavRoute
+
+interface AppRoute {
+    val title: String
 }
 
-object AppRoutes {
-    const val ADD_TRANSACTION_ROUTE = "add_transaction"
+@Serializable
+data object AddTransactionRoute : AppRoute {
+    override val title = "Add Transaction"
 }
 
-@JvmInline
-value class Route(val route: String)
-
-val NavController.currentRoute: Route
-    @Composable
-    get() = Route(currentBackStackEntryAsState().value?.destination?.route ?: "Empty route")
-
-fun Route?.toRouteName(): String {
-    return this?.route?.split('_')
-        ?.joinToString(" ") { it.replaceFirstChar { char -> char.uppercase() } } ?: "Empty route name"
-}
-
-fun Route?.isBottomNavRoute(): Boolean {
-    return this?.route in setOf(
-        BottomNavigationRoutes.HOME_ROUTE,
-        BottomNavigationRoutes.TRANSACTION_ROUTE,
-        BottomNavigationRoutes.BUDGET_ROUTE,
-        BottomNavigationRoutes.OTHER_ROUTE
-    )
+@Serializable
+data class EditTransactionRoute(val transactionItemId: Int) : AppRoute {
+    override val title = "Edit Transaction"
 }

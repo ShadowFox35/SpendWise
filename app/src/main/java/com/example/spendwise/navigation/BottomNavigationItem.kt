@@ -8,30 +8,30 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
-    val route: String,
+    val route: BottomNavRoute,
     val icon: ImageVector,
     val label: String
 ) {
     data object Home : BottomNavItem(
-        route = BottomNavigationRoutes.HOME_ROUTE,
+        route = HomeRoute,
         icon = Icons.Default.Home,
         label = "Home"
     )
 
     data object Transactions : BottomNavItem(
-        route = BottomNavigationRoutes.TRANSACTION_ROUTE,
+        route = TransactionRoute,
         icon = Icons.Default.Check,
         label = "Transactions"
     )
 
     data object Budget : BottomNavItem(
-        route = BottomNavigationRoutes.BUDGET_ROUTE,
+        route = BudgetRoute,
         icon = Icons.Default.AddCircle,
         label = "Budget"
     )
 
     data object Other : BottomNavItem(
-        route = BottomNavigationRoutes.OTHER_ROUTE,
+        route = OtherRoute,
         icon = Icons.Default.MoreVert,
         label = "Other"
     )
