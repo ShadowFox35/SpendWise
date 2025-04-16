@@ -14,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.spendwise.core.theme.LocalNavController
 import com.example.spendwise.ui.transactions.transactions.components.TransactionsList
 import com.example.spendwise.ui.transactions.transactions.model.TransactionsEffect
@@ -24,7 +24,7 @@ import com.example.spendwise.ui.transactions.transactions.model.TransactionsStat
 @Composable
 fun TransactionsScreen() {
     val navController = LocalNavController.current
-    val viewModel: TransactionsViewModel = viewModel(factory = TransactionsViewModelFactory())
+    val viewModel: TransactionsViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {

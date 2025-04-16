@@ -15,11 +15,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
 
     companion object {
-        @Volatile
-        var INSTANCE: AppDatabase? = null
 
-        fun init(context: Context) {
-            INSTANCE = Room.databaseBuilder(
+        fun createInstance(context: Context):AppDatabase {
+            return Room.databaseBuilder(
                 context,
                 AppDatabase::class.java,
                 "my_database"

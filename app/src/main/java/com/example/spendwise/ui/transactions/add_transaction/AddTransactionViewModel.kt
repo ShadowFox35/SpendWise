@@ -1,14 +1,19 @@
 package com.example.spendwise.ui.transactions.add_transaction
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.spendwise.data.providers.database.AppDatabase.Companion.INSTANCE
+import com.example.spendwise.R
 import com.example.spendwise.data.providers.database.transactions.TransactionEntity
-import com.example.spendwise.data.providers.database.transactions.toUiModel
+import com.example.spendwise.domain.use_cases.AddTransactionUseCase
+import com.example.spendwise.domain.use_cases.DeleteTransactionByIdUseCase
+import com.example.spendwise.domain.use_cases.GetTransactionByIdUseCase
+import com.example.spendwise.domain.use_cases.UpdateTransactionByIdUseCase
 import com.example.spendwise.ui.transactions.add_transaction.model.AddTransactionEffect
 import com.example.spendwise.ui.transactions.add_transaction.model.AddTransactionEvent
 import com.example.spendwise.ui.transactions.add_transaction.model.AddTransactionState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +24,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class AddTransactionViewModel(itemId: Int?) : ViewModel() {
+class AddTransactionViewModel @AssistedInject constructor(
+    @Assisted private val transactionItemId: Int?,
+    private val addTransactionUseCase: AddTransactionUseCase,
+    private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
+    private val updateTransactionByIdUseCase: UpdateTransactionByIdUseCase,
+    private val deleteTransactionByIdUseCase: DeleteTransactionByIdUseCase,
+) : ViewModel() {
     private val _state = MutableStateFlow(AddTransactionState())
     val state: StateFlow<AddTransactionState> = _state.asStateFlow()
 
@@ -27,7 +38,10 @@ class AddTransactionViewModel(itemId: Int?) : ViewModel() {
     val effect = _effect.asSharedFlow()
 
     init {
-        itemId?.let { getTransactionInfo(itemId) }
+        transactionItemId?.let {
+            _state.update { it.copy(screenTitleRes = R.string.edit_transaction_screen_title) }
+            getTransactionInfo(transactionItemId)
+        }
     }
 
     fun handleEvent(event: AddTransactionEvent) {
@@ -39,16 +53,18 @@ class AddTransactionViewModel(itemId: Int?) : ViewModel() {
         }
     }
 
-    private fun getTransactionInfo(itemId: Int) {
-
+    private fun getTransactionInfo(itemId: Int?) {
+        if (itemId == null) return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                INSTANCE?.let {
-                    val transaction = INSTANCE?.transactionDao()?.getById(id = itemId)?.toUiModel()
-                    if (transaction != null) {
-                        _state.update { it.copy(transactionTitle = transaction.title) }
-                        _state.update { it.copy(transactionAmount = transaction.amount) }
+                val transaction = getTransactionByIdUseCase(itemId)
+                if (transaction != null) {
+                    _state.update {
+                        it.copy(
+                            transactionTitle = transaction.title,
+                            transactionAmount = transaction.amount,
+                        )
                     }
                 }
             } catch (_: Exception) {
@@ -88,8 +104,8 @@ class AddTransactionViewModel(itemId: Int?) : ViewModel() {
 
     private fun addTransaction(title: String, amount: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            INSTANCE?.transactionDao()?.add(
-                transaction = TransactionEntity(
+            addTransactionUseCase(
+                TransactionEntity(
                     title = title,
                     amount = amount,
                     date = LocalDate.now().toString()
@@ -102,10 +118,13 @@ class AddTransactionViewModel(itemId: Int?) : ViewModel() {
 
     private fun updateTransaction(id: Int, title: String, amount: Double) {
         viewModelScope.launch(Dispatchers.IO) {
-            INSTANCE?.transactionDao()?.updateById(
-                id = id,
-                title = title,
-                amount = amount,
+            updateTransactionByIdUseCase(
+                transactionEntity = TransactionEntity(
+                    id = id,
+                    title = title,
+                    amount = amount,
+                    date = "new date"
+                ),
             )
             _effect.emit(
                 AddTransactionEffect.NavigateBack
@@ -115,15 +134,13 @@ class AddTransactionViewModel(itemId: Int?) : ViewModel() {
 
     private fun deleteTransaction(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            INSTANCE?.transactionDao()?.deleteById(id)
+            deleteTransactionByIdUseCase(id)
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(transactionItemId: Int?): AddTransactionViewModel
     }
 }
 
-class AddTransactionViewModelFactory(
-    private val itemId: Int?
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AddTransactionViewModel(itemId) as T
-    }
-}

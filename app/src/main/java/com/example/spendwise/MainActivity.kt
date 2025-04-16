@@ -12,15 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.spendwise.core.theme.LocalNavController
 import com.example.spendwise.core.theme.SpendWiseTheme
-import com.example.spendwise.data.providers.database.AppDatabase
 import com.example.spendwise.navigation.BottomNavigationBar
 import com.example.spendwise.navigation.NavigationGraph
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        AppDatabase.init(application)
         setContent {
             SpendWiseTheme {
                 MainScreen()

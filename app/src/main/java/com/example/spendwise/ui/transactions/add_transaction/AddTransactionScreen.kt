@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.spendwise.R
+import com.example.spendwise.core.utils.rememberAddTransactionViewModelFactory
 import com.example.spendwise.ui.transactions.add_transaction.model.AddTransactionEffect
 import com.example.spendwise.ui.transactions.add_transaction.model.AddTransactionEvent
 
@@ -40,8 +41,8 @@ fun AddTransactionsScreen(
     navController: NavController,
     transactionItemId: Int?
 ) {
-    val viewModel: AddTransactionViewModel =
-        viewModel(factory = AddTransactionViewModelFactory(transactionItemId))
+    val factory = rememberAddTransactionViewModelFactory()
+    val viewModel = viewModel { factory.create(transactionItemId) }
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -59,8 +60,7 @@ fun AddTransactionsScreen(
             windowInsets = WindowInsets(0.dp),
             modifier = Modifier.background(Color.Green),
             title = {
-                Text(transactionItemId?.let { stringResource(R.string.add_transaction_screen_title) }
-                    ?: stringResource(R.string.edit_transaction_screen_title))
+                Text(stringResource(state.screenTitleRes))
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
