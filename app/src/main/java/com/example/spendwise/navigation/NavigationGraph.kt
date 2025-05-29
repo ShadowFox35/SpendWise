@@ -26,26 +26,24 @@ fun NavigationGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = HomeRoute,
+        startDestination = BottomNavRoute.HomeRoute,
         enterTransition = { fadeIn(animationSpec = tween(200)) },
         exitTransition = { fadeOut(animationSpec = tween(200)) },
     ) {
-        composable<HomeRoute> { HomeScreen() }
-        composable<TransactionRoute> { TransactionsScreen() }
-        composable<BudgetRoute> { BudgetScreen() }
-        composable<OtherRoute> { OtherScreen() }
+        composable<BottomNavRoute.HomeRoute> { HomeScreen() }
+        composable<BottomNavRoute.TransactionRoute> { TransactionsScreen() }
+        composable<BottomNavRoute.BudgetRoute> { BudgetScreen() }
+        composable<BottomNavRoute.OtherRoute> { OtherScreen() }
 
-        composable<EditTransactionRoute>(
+        composable<AppRoute.EditTransactionRoute>(
             typeMap = mapOf(
-                typeOf<TransactionModel>() to CustomNavType(TransactionModel::class.serializer()),
-
-                )
+                typeOf<TransactionModel>() to CustomNavType(TransactionModel::class.serializer()),)
         ) { backStackEntry ->
-            val args: EditTransactionRoute = backStackEntry.toRoute()
+            val args: AppRoute.EditTransactionRoute = backStackEntry.toRoute()
             AddTransactionsScreen(navController = navController, args.transactionItemId)
         }
 
-        composable<AddTransactionRoute>(
+        composable<AppRoute.AddTransactionRoute>(
         ) {
             AddTransactionsScreen(navController = navController, null)
         }

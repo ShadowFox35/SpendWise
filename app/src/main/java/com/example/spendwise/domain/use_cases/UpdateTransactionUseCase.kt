@@ -4,10 +4,10 @@ import com.example.spendwise.data.providers.database.transactions.TransactionEnt
 import com.example.spendwise.domain.repositories.TransactionsRepository
 import javax.inject.Inject
 
-class UpdateTransactionByIdUseCase @Inject constructor(
+class UpdateTransactionUseCase @Inject constructor(
     private val transactionsRepository: TransactionsRepository
 ) {
     operator fun invoke(transactionEntity: TransactionEntity) {
-        transactionsRepository.updateTransactionById(transactionEntity)
+        transactionsRepository.updateTransaction(transactionEntity)
     }
 }

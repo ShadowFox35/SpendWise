@@ -5,10 +5,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.example.spendwise.core.theme.LocalNavController
 
 @Composable
-fun BottomNavigationBar(navController: NavController) {
+fun BottomNavigationBar() {
+    val navController = LocalNavController.current
     NavigationBar {
         val routesList = listOf(
             BottomNavItem.Home,
@@ -19,8 +21,13 @@ fun BottomNavigationBar(navController: NavController) {
 
         routesList.forEach { item ->
             NavigationBarItem(
-                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = stringResource(item.label)
+                    )
+                },
+                label = { Text(stringResource(item.label)) },
                 selected = navController.currentRoute == item.route.toString(),
                 onClick = {
                     navController.navigate(item.route) {

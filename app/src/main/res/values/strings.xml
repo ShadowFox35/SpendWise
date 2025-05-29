@@ -1,15 +1,31 @@
 <resources>
     <string name="app_name">SpendWise</string>
     <!--Common-->
+    <string name="common_submit">Submit</string>
+    <string name="common_cansel">Cansel</string>
     <string name="common_delete">Delete</string>
     <string name="common_back">Back</string>
 
+    <!--Navigation Bar-->
+    <string name="navigation_bar_home">Home</string>
+    <string name="navigation_bar_transactions">Transactions</string>
+    <string name="navigation_bar_budget">Budget</string>
+    <string name="navigation_bar_other">Other</string>
+
+    <!--Errors Messages-->
+    <string name="error_get_transaction">Failed to load transaction details</string>
+    <string name="error_add_transaction">Could not add the transaction</string>
+    <string name="error_update_transaction">Could not update the transaction</string>
+    <string name="error_delete_transaction">Failed to delete the transaction</string>
+
     <!--Transaction Screen-->
     <string name="transaction_screen_empty">No transactions yet</string>
+    <string name="transaction_screen_example">USD %s</string>
 
     <!--Save Transaction Screens-->
     <string name="add_transaction_screen_title">Add Transaction</string>
     <string name="edit_transaction_screen_title">Edit Transaction</string>
+    <string name="edit_transaction_screen_date">Edit Date</string>
     <string name="add_transaction_screen_amount_field">Amount</string>
     <string name="add_transaction_screen_title_field">Title</string>
     <string name="add_transaction_screen_submit_button">Save Transaction</string>

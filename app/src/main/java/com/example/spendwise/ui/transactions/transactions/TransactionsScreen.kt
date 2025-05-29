@@ -28,33 +28,34 @@ fun TransactionsScreen() {
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.handleEvent(TransactionsEvent.Initial)
-        viewModel.effect.collect { effect ->
+        viewModel.submitEvent(TransactionsEvent.Initial)
+        viewModel.effectFlow.collect { effect ->
             when (effect) {
+                is TransactionsEffect.OpenEditTransactionScreen -> navController.navigate(effect.route)
                 is TransactionsEffect.OpenAddTransactionScreen -> navController.navigate(effect.route)
-                is TransactionsEffect.OpenAddTransactionRouteWithOutArgs -> navController.navigate(
-                    effect.route
-                )
             }
         }
     }
 
     TransactionContent(
         state = state,
-        onNewEvent = viewModel::handleEvent,
+        onNewEvent = viewModel::submitEvent,
     )
 }
 
 @Composable
 private fun TransactionContent(
-    state:TransactionsState,
-    onNewEvent: (TransactionsEvent)->Unit){
+    state: TransactionsState,
+    onNewEvent: (TransactionsEvent) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         TransactionsList(state = state, onEvent = onNewEvent)
+
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -63,7 +64,7 @@ private fun TransactionContent(
                     bottom = 24.dp
                 ),
             onClick = {
-               onNewEvent(TransactionsEvent.OnFloatActionButtonClick)
+                onNewEvent(TransactionsEvent.OnFloatActionButtonClick)
             },
         ) {
             Icon(

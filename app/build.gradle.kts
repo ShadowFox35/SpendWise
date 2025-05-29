@@ -60,6 +60,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.recyclerview)
     ksp(libs.androidx.room.compiler)
 
     // Hilt

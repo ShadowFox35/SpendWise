@@ -1,20 +1,19 @@
 package com.example.spendwise.data.repository_impls
 
-import com.example.spendwise.data.providers.database.AppDatabase
+import com.example.spendwise.data.providers.database.TransactionsDatabase
 import com.example.spendwise.data.providers.database.transactions.TransactionEntity
 import com.example.spendwise.domain.repositories.TransactionsRepository
 import javax.inject.Inject
 
 class TransactionsRepositoryImpl @Inject constructor(
-    private val database: AppDatabase,
+    private val database: TransactionsDatabase,
 ) : TransactionsRepository {
 
     override fun getAllTransactions(): List<TransactionEntity> {
         return database.transactionDao().getAll()
     }
 
-    override fun getTransactionById(transactionId: Int):
-            TransactionEntity? {
+    override fun getTransactionById(transactionId: Int): TransactionEntity? {
         return database.transactionDao().getById(transactionId)
     }
 
@@ -22,8 +21,8 @@ class TransactionsRepositoryImpl @Inject constructor(
         database.transactionDao().add(transaction)
     }
 
-    override fun updateTransactionById(transaction: TransactionEntity) {
-        database.transactionDao().updateById(transaction.id, transaction.title, transaction.amount)
+    override fun updateTransaction(transaction: TransactionEntity) {
+        database.transactionDao().update(transaction)
     }
 
     override fun deleteTransactionById(transactionId: Int) {

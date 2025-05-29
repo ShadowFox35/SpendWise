@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface TransactionDao {
@@ -13,8 +14,8 @@ interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addAll(transactions: List<TransactionEntity>)
 
-    @Query("UPDATE transactions SET title = :title, amount = :amount WHERE id = :id")
-    fun updateById(id: Int, title: String, amount: Double)
+    @Update
+    fun update(transaction: TransactionEntity)
 
     @Query("DELETE FROM transactions WHERE id = :id")
     fun deleteById(id: Int)

@@ -1,7 +1,7 @@
 package com.example.spendwise.data.di
 
 import android.content.Context
-import com.example.spendwise.data.providers.database.AppDatabase
+import com.example.spendwise.data.providers.database.TransactionsDatabase
 import com.example.spendwise.data.repository_impls.TransactionsRepositoryImpl
 import com.example.spendwise.domain.repositories.TransactionsRepository
 import dagger.Module
@@ -17,13 +17,13 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context):AppDatabase {
-        return AppDatabase.createInstance(context)
+    fun provideDatabase(@ApplicationContext context: Context):TransactionsDatabase {
+        return TransactionsDatabase.createInstance(context)
     }
 
     @Provides
     @Singleton
-    fun provideTransactionRepository(appDatabase: AppDatabase): TransactionsRepository {
-        return TransactionsRepositoryImpl(appDatabase)
+    fun provideTransactionRepository(transactionsDatabase: TransactionsDatabase): TransactionsRepository {
+        return TransactionsRepositoryImpl(transactionsDatabase)
     }
 }

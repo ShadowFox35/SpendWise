@@ -20,14 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.spendwise.R
+import com.example.spendwise.ui.transactions.transactions.model.TransactionsEvent
 
 @Composable
 fun TransactionsListItemRow(
     itemModel: TransactionItemUiModel,
-    onIconClick: (() -> Unit)? = null
+    onEvent: (TransactionsEvent) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -41,16 +44,16 @@ fun TransactionsListItemRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (onIconClick != null) {
-            Icon(
-                imageVector = Icons.Default.Create,
-                contentDescription = "icon",
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable { onIconClick() }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
+        Icon(
+            imageVector = Icons.Default.Create,
+            contentDescription = "icon",
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onEvent(TransactionsEvent.OnEditActionButtonClick(itemModel.id)) }
+        )
+
+        Spacer(modifier = Modifier.width(16.dp))
+
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -61,21 +64,22 @@ fun TransactionsListItemRow(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )
+
                 Text(
-                    text = "USD ${itemModel.amount}",
+                    text = stringResource(R.string.transaction_screen_example,itemModel.amount),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Blue
                 )
-
             }
+
             Spacer(modifier = Modifier.height(4.dp))
+
             Text(
                 text = itemModel.title,
                 fontSize = 14.sp,
                 color = Color.Gray
             )
-
         }
     }
 }

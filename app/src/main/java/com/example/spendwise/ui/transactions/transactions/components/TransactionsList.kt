@@ -26,15 +26,16 @@ import com.example.spendwise.ui.transactions.transactions.model.TransactionsStat
 @Composable
 fun TransactionsList(
     state: TransactionsState,
-    onEvent: (TransactionsEvent) -> Unit
+    onEvent: (TransactionsEvent) -> Unit,
 ) {
-    if (state.transactionsList.isEmpty()) EmptyTransactionsPlaceholder()
-    else {
+    if (state.transactionsList.isEmpty()) {
+        EmptyTransactionsPlaceholder()
+    } else {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(state.transactionsList) { item ->
                 TransactionsListItemRow(
-                    item,
-                    onIconClick = { onEvent(TransactionsEvent.OnEditActionButtonClick(item.id)) }
+                   itemModel = item,
+                    onEvent = onEvent,
                 )
             }
         }
